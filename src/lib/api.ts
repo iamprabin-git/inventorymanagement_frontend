@@ -11,7 +11,7 @@ function getApiBase(): string {
   if (typeof window !== "undefined") {
     return "/api-backend";
   }
-  return "http://127.0.0.1:8000/api";
+  return "https://inventory.blessauto.com.np/api";
 }
 
 export function getToken(): string | null {

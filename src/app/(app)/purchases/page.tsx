@@ -86,7 +86,7 @@ export default function PurchasesPage() {
                     <td className="px-4 py-2 text-slate-200">{p.supplier_name}</td>
                     <td className="px-4 py-2">{p.items_count}</td>
                     <td className="px-4 py-2 text-white">
-                      ${Number(p.total).toFixed(2)}
+                      Rs. {Number(p.total).toFixed(2)}
                     </td>
                     <td className="px-4 py-2 text-right">
                       <Link
