@@ -16,7 +16,7 @@ export default function NewProductPage() {
     unit_price: "",
     cost_price: "",
     stock_quantity: "0",
-    low_stock_threshold: "5",
+    low_stock_threshold: "1",
     is_active: true,
   });
 
