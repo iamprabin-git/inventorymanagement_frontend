@@ -3,6 +3,8 @@
 import { api } from "@/lib/api";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { TiPencil } from "react-icons/ti";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 type Service = {
   id: number;
@@ -74,7 +76,7 @@ export default function ServicesPage() {
                   <tr key={s.id}>
                     <td className="px-4 py-2 text-slate-200">{s.name}</td>
                     <td className="px-4 py-2 text-slate-400">
-                      ${Number(s.unit_price).toFixed(2)}
+                      Rs.{Number(s.unit_price).toFixed(2)}
                     </td>
                     <td className="px-4 py-2">
                       {s.is_active ? (
@@ -86,16 +88,19 @@ export default function ServicesPage() {
                     <td className="px-4 py-2 text-right">
                       <Link
                         href={`/services/${s.id}/edit`}
-                        className="text-emerald-500 hover:underline"
+                        className="text-emerald-500 hover:underline inline-flex items-center"
+                        aria-label={`Edit service ${s.name || s.id}`} // Adds a unique name for A11y
                       >
-                        Edit
+                        <TiPencil size={15} />
                       </Link>
+
                       <button
                         type="button"
                         onClick={() => remove(s.id)}
-                        className="ml-3 text-red-400 hover:underline"
+                        className="ml-3 text-red-400 hover:underline inline-flex items-center"
+                        aria-label={`Delete service ${s.name || s.id}`} // Adds a unique name for A11y
                       >
-                        Delete
+                        <RiDeleteBin6Line size={15} />
                       </button>
                     </td>
                   </tr>

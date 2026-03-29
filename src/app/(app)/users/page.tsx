@@ -4,6 +4,8 @@ import { api } from "@/lib/api";
 import { useAuth } from "@/contexts/auth-context";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { GrEdit } from "react-icons/gr";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 type UserRow = {
   id: number;
@@ -96,17 +98,22 @@ export default function UsersPage() {
                   <td className="px-4 py-2 text-right">
                     <Link
                       href={`/users/${u.id}/edit`}
-                      className="text-emerald-500 hover:underline"
+                      className="text-emerald-500 hover:underline inline-flex items-center"
+                      title="Edit User"
+                      aria-label={`Edit user ${u.name}`}
                     >
-                      Edit
+                      <GrEdit size={15}/>
                     </Link>
+
                     {u.id !== current?.id && (
                       <button
                         type="button"
                         onClick={() => remove(u)}
-                        className="ml-3 text-red-400 hover:underline"
+                        className="ml-3 text-red-400 hover:underline inline-flex items-center"
+                        title="Delete User"
+                        aria-label={`Delete user ${u.name}`}
                       >
-                        Delete
+                        <RiDeleteBinLine size={15}/>
                       </button>
                     )}
                   </td>

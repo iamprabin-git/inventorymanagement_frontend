@@ -107,7 +107,7 @@ export default function ReportsPage() {
             <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
               <p className="text-xs uppercase text-slate-500">Sales total</p>
               <p className="mt-1 text-2xl font-semibold text-white">
-                ${summary.sales.total.toFixed(2)}
+                Rs. {summary.sales.total.toFixed(2)}
               </p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
@@ -119,7 +119,7 @@ export default function ReportsPage() {
             <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
               <p className="text-xs uppercase text-slate-500">Purchases total</p>
               <p className="mt-1 text-2xl font-semibold text-white">
-                ${summary.purchases.total.toFixed(2)}
+                Rs. {summary.purchases.total.toFixed(2)}
               </p>
             </div>
           </div>
@@ -136,25 +136,25 @@ export default function ReportsPage() {
             <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
               <p className="text-xs uppercase text-slate-500">Revenue</p>
               <p className="mt-1 text-xl font-semibold text-emerald-400">
-                ${financial.revenue.toFixed(2)}
+                Rs. {financial.revenue.toFixed(2)}
               </p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
               <p className="text-xs uppercase text-slate-500">COGS (products)</p>
               <p className="mt-1 text-xl font-semibold text-slate-200">
-                ${financial.cost_of_goods_sold.toFixed(2)}
+                Rs. {financial.cost_of_goods_sold.toFixed(2)}
               </p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
               <p className="text-xs uppercase text-slate-500">Gross profit</p>
               <p className="mt-1 text-xl font-semibold text-white">
-                ${financial.gross_profit.toFixed(2)}
+                Rs. {financial.gross_profit.toFixed(2)}
               </p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
               <p className="text-xs uppercase text-slate-500">Purchase spend</p>
               <p className="mt-1 text-xl font-semibold text-amber-400">
-                ${financial.purchase_spend.toFixed(2)}
+                Rs. {financial.purchase_spend.toFixed(2)}
               </p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
@@ -162,7 +162,7 @@ export default function ReportsPage() {
                 Revenue − purchase spend
               </p>
               <p className="mt-1 text-xl font-semibold text-slate-200">
-                ${financial.revenue_minus_purchase_spend.toFixed(2)}
+                Rs. {financial.revenue_minus_purchase_spend.toFixed(2)}
               </p>
             </div>
           </div>
@@ -175,7 +175,7 @@ export default function ReportsPage() {
             Inventory valuation (cost × qty)
           </h2>
           <p className="mb-4 text-2xl font-semibold text-white">
-            ${valuation.total_valuation.toFixed(2)}
+            Rs. {valuation.total_valuation.toFixed(2)}
           </p>
           <div className="overflow-hidden rounded-lg border border-slate-800">
             <table className="w-full text-left text-sm">
@@ -197,10 +197,10 @@ export default function ReportsPage() {
                     <td className="px-4 py-2 text-slate-200">{l.name}</td>
                     <td className="px-4 py-2">{l.quantity}</td>
                     <td className="px-4 py-2 text-slate-400">
-                      ${l.cost_price.toFixed(2)}
+                      Rs. {l.cost_price.toFixed(2)}
                     </td>
                     <td className="px-4 py-2 text-white">
-                      ${l.line_value.toFixed(2)}
+                      Rs. {l.line_value.toFixed(2)}
                     </td>
                   </tr>
                 ))}

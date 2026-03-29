@@ -3,6 +3,8 @@
 import { api } from "@/lib/api";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { TiPencil } from "react-icons/ti";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 type Product = {
   id: number;
@@ -29,9 +31,7 @@ export default function ProductsPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api<Paginated<Product>>(
-        `/products?page=${page}`
-      );
+      const res = await api<Paginated<Product>>(`/products?page=${page}`);
       setRows(res.data);
       setMeta(res.meta);
     } finally {
@@ -85,7 +85,7 @@ export default function ProductsPage() {
                     </td>
                     <td className="px-4 py-2 text-slate-200">{p.name}</td>
                     <td className="px-4 py-2 text-slate-400">
-                      ${Number(p.unit_price).toFixed(2)}
+                      Rs. {Number(p.unit_price).toFixed(2)}
                     </td>
                     <td className="px-4 py-2">{p.stock_quantity}</td>
                     <td className="px-4 py-2">
@@ -96,19 +96,24 @@ export default function ProductsPage() {
                       )}
                     </td>
                     <td className="px-4 py-2 text-right">
-                      <Link
-                        href={`/products/${p.id}/edit`}
-                        className="text-emerald-500 hover:underline"
-                      >
-                        Edit
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => remove(p.id)}
-                        className="ml-3 text-red-400 hover:underline"
-                      >
-                        Delete
-                      </button>
+                      <div className="flex justify-end items-center gap-3">
+                        {" "}
+                        {/* Added this wrapper */}
+                        <Link
+                          href={`/products/${p.id}/edit`}
+                          className="text-emerald-500 hover:text-emerald-400 transition-colors"
+                        >
+                          <TiPencil size={20} />{" "}
+                          {/* Added size for better visibility */}
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => remove(p.id)}
+                          className="text-red-400 hover:text-red-300 transition-colors"
+                        >
+                          <RiDeleteBin6Line size={18} /> {/* Added size */}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

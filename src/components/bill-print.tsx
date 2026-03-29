@@ -1,6 +1,13 @@
-import { COMPANY_NAME } from "@/lib/company";
+"use client";
 
-type SaleItem = {
+import { COMPANY_NAME } from "@/lib/company";
+import logo from "../../public/images/bless_logo.png";
+import Image from "next/image";
+import { FaPhoneAlt } from "react-icons/fa";
+import { IoMail } from "react-icons/io5";
+
+// 1. Fixed: Added back the missing Type Definitions
+export type SaleItem = {
   id: number;
   quantity: number;
   unit_price: string;
@@ -22,213 +29,185 @@ export type SaleBillData = {
   items: SaleItem[];
 };
 
-type PurchaseItem = {
-  id: number;
-  quantity: number;
-  unit_cost: string;
-  line_total: string;
-  product?: { name: string; sku: string };
-};
-
-export type PurchaseBillData = {
-  id: number;
-  reference: string | null;
-  supplier_name: string;
-  purchase_date: string;
-  subtotal: string;
-  total: string;
-  notes: string | null;
-  user?: { name: string };
-  items: PurchaseItem[];
-};
-
 function money(n: string | number) {
   const v = typeof n === "string" ? Number(n) : n;
-  return v.toFixed(2);
+  return v.toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export function SaleBillDocument({ sale }: { sale: SaleBillData }) {
   return (
-    <div className="bill-print-root space-y-6 text-slate-900 print:text-black">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-300 pb-4 print:border-black">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white print:text-black">
-            {COMPANY_NAME}
-          </h2>
-          <p className="mt-1 text-sm text-slate-400 print:text-neutral-600">
-            Sales invoice
-          </p>
-        </div>
-        <div className="text-right text-sm">
-          <p className="font-mono text-lg font-semibold text-emerald-400 print:text-black">
-            {sale.invoice_no}
-          </p>
-          <p className="text-slate-400 print:text-neutral-600">Date: {sale.sale_date}</p>
-        </div>
-      </div>
+    <div className="bill-print-root mx-auto max-w-[800px] bg-white p-8 text-slate-900 shadow-sm print:max-w-full print:p-0 print:shadow-none">
+      {/* Header Section */}
+      <div className="flex justify-between border-b-2 border-slate-900 pb-6 items-center">
+        {/* Left Side: Logo & Address */}
+        <div className="flex items-center gap-6">
+          <Image
+            src={logo}
+            alt="Bless Auto Logo"
+            width={80}
+            height={80}
+            className="h-20 w-20 object-contain"
+          />
 
-      <div className="grid gap-2 text-sm sm:grid-cols-2">
-        <div>
-          <p className="font-medium text-slate-500 print:text-neutral-600">Bill to</p>
-          <p className="text-slate-200 print:text-black">{sale.customer_name ?? "—"}</p>
-          <p className="text-slate-400 print:text-neutral-700">
-            {sale.customer_phone ?? ""}
-          </p>
-        </div>
-        {sale.user && (
-          <div className="sm:text-right">
-            <p className="font-medium text-slate-500 print:text-neutral-600">Prepared by</p>
-            <p className="text-slate-200 print:text-black">{sale.user.name}</p>
+          {/* Center-aligned contact details column */}
+          <div className="flex flex-col items-center border-l-2 border-slate-100 pl-6">
+            <h1 className="text-3xl font-black uppercase tracking-tighter text-slate-900 leading-none mb-2">
+              {COMPANY_NAME}
+            </h1>
+
+            <div className="space-y-1 text-center" spellCheck="false">
+              <p className="text-sm font-bold text-slate-600">
+                Satdobato, Lalitpur
+              </p>
+
+              {/* Phone Numbers Row */}
+              <div className="flex items-center justify-center gap-4 text-[13px] text-slate-500">
+                <p className="flex items-center gap-1.5">
+                  <FaPhoneAlt size={10} />
+                  <span>+977-9851090167</span>
+                </p>
+                
+              </div>
+
+              {/* Email Row */}
+              <div className="flex items-center justify-center gap-4 text-[13px] text-slate-500">
+                <p className="flex items-center gap-1.5">
+                <IoMail size={10}/>info@blessauto.com.np
+              </p>
+                
+              </div>
+              
+            </div>
           </div>
-        )}
-      </div>
-
-      <table className="w-full border-collapse text-sm">
-        <thead>
-          <tr className="border-b border-slate-600 print:border-black">
-            <th className="py-2 text-left font-medium">Description</th>
-            <th className="w-16 py-2 text-right font-medium">Qty</th>
-            <th className="w-24 py-2 text-right font-medium">Unit</th>
-            <th className="w-28 py-2 text-right font-medium">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sale.items.map((it) => (
-            <tr key={it.id} className="border-b border-slate-800 print:border-neutral-300">
-              <td className="py-2 text-slate-200 print:text-black">
-                {it.product
-                  ? `${it.product.sku} — ${it.product.name}`
-                  : it.service?.name ?? "—"}
-              </td>
-              <td className="py-2 text-right text-slate-300 print:text-black">{it.quantity}</td>
-              <td className="py-2 text-right text-slate-300 print:text-black">
-                ${money(it.unit_price)}
-              </td>
-              <td className="py-2 text-right font-medium text-white print:text-black">
-                ${money(it.line_total)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div className="ml-auto w-full max-w-xs space-y-1 text-sm">
-        <div className="flex justify-between text-slate-400 print:text-neutral-700">
-          <span>Subtotal</span>
-          <span>${money(sale.subtotal)}</span>
         </div>
-        <div className="flex justify-between text-slate-400 print:text-neutral-700">
-          <span>Tax</span>
-          <span>${money(sale.tax_amount)}</span>
-        </div>
-        <div className="flex justify-between border-t border-slate-600 pt-2 text-base font-semibold text-white print:border-black print:text-black">
-          <span>Total</span>
-          <span>${money(sale.total)}</span>
-        </div>
-      </div>
 
-      {sale.notes && (
-        <div className="text-sm text-slate-400 print:text-neutral-700">
-          <span className="font-medium text-slate-500 print:text-neutral-600">Notes: </span>
-          {sale.notes}
-        </div>
-      )}
-
-      <p className="border-t border-slate-800 pt-4 text-center text-xs text-slate-500 print:border-neutral-300 print:text-neutral-600">
-        Thank you for your business.
-      </p>
-    </div>
-  );
-}
-
-export function PurchaseBillDocument({ purchase }: { purchase: PurchaseBillData }) {
-  return (
-    <div className="bill-print-root space-y-6 text-slate-900 print:text-black">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-300 pb-4 print:border-black">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white print:text-black">
-            {COMPANY_NAME}
+        {/* Right Side: Invoice Meta Data */}
+        <div className="text-right flex flex-col items-end">
+          <div className="mb-2 inline-block rounded bg-slate-900 px-2 py-1 text-[10px] font-bold tracking-widest text-white print:bg-transparent print:text-black print:border print:border-slate-200">
+            PAN/VAT: 303668860
+          </div>
+          <h2 className="text-2xl font-black uppercase text-emerald-600 print:text-black leading-none mb-1">
+            Tax Invoice
           </h2>
-          <p className="mt-1 text-sm text-slate-400 print:text-neutral-600">
-            Purchase bill
-          </p>
-        </div>
-        <div className="text-right text-sm">
-          <p className="text-lg font-semibold text-amber-400 print:text-black">
-            #{purchase.id}
-          </p>
-          {purchase.reference && (
-            <p className="font-mono text-slate-300 print:text-neutral-800">
-              Ref: {purchase.reference}
+          <div className="space-y-0.5">
+            <p className="text-sm font-bold text-slate-800">
+              No: #{sale.invoice_no}
             </p>
-          )}
-          <p className="text-slate-400 print:text-neutral-600">Date: {purchase.purchase_date}</p>
-        </div>
-      </div>
-
-      <div className="grid gap-2 text-sm sm:grid-cols-2">
-        <div>
-          <p className="font-medium text-slate-500 print:text-neutral-600">Supplier</p>
-          <p className="text-lg text-slate-200 print:text-black">{purchase.supplier_name}</p>
-        </div>
-        {purchase.user && (
-          <div className="sm:text-right">
-            <p className="font-medium text-slate-500 print:text-neutral-600">Recorded by</p>
-            <p className="text-slate-200 print:text-black">{purchase.user.name}</p>
+            <p className="text-[11px] font-medium text-slate-500 uppercase tracking-tighter">
+              Date: {sale.sale_date}
+            </p>
           </div>
-        )}
+        </div>
       </div>
 
-      <table className="w-full border-collapse text-sm">
-        <thead>
-          <tr className="border-b border-slate-600 print:border-black">
-            <th className="py-2 text-left font-medium">Product</th>
-            <th className="w-16 py-2 text-right font-medium">Qty</th>
-            <th className="w-24 py-2 text-right font-medium">Unit cost</th>
-            <th className="w-28 py-2 text-right font-medium">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {purchase.items.map((it) => (
-            <tr key={it.id} className="border-b border-slate-800 print:border-neutral-300">
-              <td className="py-2 text-slate-200 print:text-black">
-                {it.product
-                  ? `${it.product.sku} — ${it.product.name}`
-                  : "—"}
-              </td>
-              <td className="py-2 text-right text-slate-300 print:text-black">{it.quantity}</td>
-              <td className="py-2 text-right text-slate-300 print:text-black">
-                ${money(it.unit_cost)}
-              </td>
-              <td className="py-2 text-right font-medium text-white print:text-black">
-                ${money(it.line_total)}
-              </td>
+      <div className="mt-8 grid grid-cols-2 gap-12">
+        <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-4 print:border-none print:bg-transparent">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Bill To
+          </p>
+          <p className="mt-1 text-base font-bold text-slate-900">
+            {sale.customer_name ?? "Walking Customer"}
+          </p>
+          <p className="text-sm text-slate-600">{sale.customer_phone}</p>
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-y border-slate-900 bg-slate-700 text-white print:bg-transparent print:text-black">
+              <th className="py-3 px-2 text-left font-bold uppercase tracking-wider">
+                Description
+              </th>
+              <th className="py-3 px-2 text-center font-bold uppercase tracking-wider">
+                Qty
+              </th>
+              <th className="py-3 px-2 text-right font-bold uppercase tracking-wider">
+                Rate
+              </th>
+              <th className="py-3 px-2 text-right font-bold uppercase tracking-wider">
+                Total
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-slate-200">
+            {/* 2. Fixed: Added type definition to 'it' to resolve 'any' error */}
+            {sale.items.map((it: SaleItem) => (
+              <tr key={it.id} className="group">
+                <td className="py-4 px-2">
+                  <span className="font-bold text-slate-800">
+                    {it.product ? it.product.name : it.service?.name}
+                  </span>
+                  {it.product && (
+                    <p className="text-[10px] text-slate-500 font-mono">
+                      {it.product.sku}
+                    </p>
+                  )}
+                </td>
+                <td className="py-4 px-2 text-center text-slate-700">
+                  {it.quantity}
+                </td>
+                <td className="py-4 px-2 text-right text-slate-700">
+                  Rs. {money(it.unit_price)}
+                </td>
+                <td className="py-4 px-2 text-right font-bold text-slate-900">
+                  Rs. {money(it.line_total)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <div className="ml-auto w-full max-w-xs space-y-1 text-sm">
-        <div className="flex justify-between text-slate-400 print:text-neutral-700">
-          <span>Subtotal</span>
-          <span>${money(purchase.subtotal)}</span>
-        </div>
-        <div className="flex justify-between border-t border-slate-600 pt-2 text-base font-semibold text-white print:border-black print:text-black">
-          <span>Total</span>
-          <span>${money(purchase.total)}</span>
+      <div className="mt-6 flex justify-end">
+        <div className="w-full max-w-[400px] space-y-2 border-t-2 border-slate-900 pt-4">
+          <div className="flex justify-between text-sm text-slate-600">
+            <span>Subtotal</span>
+            <span>Rs. {money(sale.subtotal)}</span>
+          </div>
+          <div className="flex justify-between text-sm text-slate-600">
+            <span>VAT (13%)</span>
+            <span>Rs. {money(sale.tax_amount)}</span>
+          </div>
+          <div className="flex justify-between rounded bg-slate-700 p-2 text-lg font-black text-white print:bg-transparent print:text-black">
+            <span>GRAND TOTAL</span>
+            <span>Rs. {money(sale.total)}</span>
+          </div>
         </div>
       </div>
 
-      {purchase.notes && (
-        <div className="text-sm text-slate-400 print:text-neutral-700">
-          <span className="font-medium text-slate-500 print:text-neutral-600">Notes: </span>
-          {purchase.notes}
+      <div className="mt-16 grid grid-cols-2 gap-12">
+        <div className="text-[10px] text-slate-500 italic" spellCheck="false">
+          <p className="font-bold uppercase not-italic text-slate-700 mb-1">
+            Terms & Conditions:
+          </p>
+          <ul className="list-disc pl-4 space-y-1">
+            <li>Goods once sold are not returnable.</li>
+            <li>
+              Ownership transfer (Naamsari) must be initiated within 15 days.
+            </li>
+            <li>Subject to local jurisdiction.</li>
+          </ul>
         </div>
-      )}
+        <div className="flex flex-col items-end justify-end space-y-10">
+          <div className="flex w-full justify-between gap-8">
+            <div className="flex-1 border-t border-slate-400 pt-2 text-center text-[10px] uppercase font-bold text-slate-600">
+              Customer Signature
+            </div>
+            <div className="flex-1 border-t border-slate-400 pt-2 text-center text-[10px] uppercase font-bold text-slate-600">
+              Authorized Signatory
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <p className="border-t border-slate-800 pt-4 text-center text-xs text-slate-500 print:border-neutral-300 print:text-neutral-600">
-        Internal purchase record — {COMPANY_NAME}
-      </p>
+      <footer className="mt-12 border-t border-slate-100 pt-4 text-center text-[10px] text-slate-400 print:text-neutral-500">
+        This is a computer-generated invoice. No signature required unless
+        specified.
+      </footer>
     </div>
   );
 }

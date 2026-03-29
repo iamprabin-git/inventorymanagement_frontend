@@ -86,7 +86,7 @@ export default function SalesPage() {
                     </td>
                     <td className="px-4 py-2">{s.items_count}</td>
                     <td className="px-4 py-2 text-white">
-                      ${Number(s.total).toFixed(2)}
+                      Rs. {Number(s.total).toFixed(2)}
                     </td>
                     <td className="px-4 py-2 text-right">
                       <Link
